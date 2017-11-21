@@ -54,6 +54,7 @@
                 android:id="@+id/responseTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -71,6 +72,7 @@
                 android:id="@+id/bodyField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:inputType="textMultiLine"
                 android:minLines="8"/>
 
@@ -79,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="DONE"
-                android:layout_alignParentBottom="true"/>
+                android:layout_below="@id/bodyField"/>
         </RelativeLayout>
 
     </LinearLayout>
