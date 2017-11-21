@@ -14,6 +14,7 @@
 
         <EditText
             android:id="@+id/urlInput"
+            android:hint="URL HERE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -23,21 +24,29 @@
             android:orientation="horizontal">
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/methodSelect"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:spinnerMode="dropdown" />
 
             <Button
-                android:id="@+id/submitButton"
+                android:visibility="invisible"
+                android:id="@+id/bodyButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="submit"/>
+                android:text="Body"/>
         </LinearLayout>
 
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="submit"/>
+
         <ScrollView
+            android:id="@+id/responseView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -51,6 +60,27 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
         </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/bodyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/bodyField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="8"/>
+
+            <Button
+                android:id="@+id/bodyDoneButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DONE"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
 
     </LinearLayout>
 

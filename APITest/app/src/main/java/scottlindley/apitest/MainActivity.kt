@@ -3,7 +3,8 @@ package scottlindley.apitest
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.github.kittinunf.fuel.core.FuelManager
+import android.view.View
+import android.widget.AdapterView
 import com.github.kittinunf.fuel.httpGet
 import kotlinx.android.synthetic.main.activity_main.*
 import scottlindley.apitest.R.layout.activity_main
@@ -13,30 +14,75 @@ import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.core.Request
 import com.github.kittinunf.fuel.core.Response
 import com.github.kittinunf.result.Result
+import android.widget.AdapterView.OnItemSelectedListener
+
 
 class MainActivity : AppCompatActivity() {
+
+    var bodyString: String = "{\n\n}"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(activity_main)
 
+        initSpinner()
+        initBodyView()
+
         val handleJson = fun (json: Any?) {
             if (json == null) return
             try {
-                Log.d("handleJson", json.toString())
                 responseTextView.text = json.toString()
             } catch (e : Exception) { Log.e("handleJson", e.toString()) }
         }
 
-        val items = arrayOf("GET", "POST", "PUT", "DELETE")
-        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
+        bodyButton.setOnClickListener({ toggleBodyMode() })
 
         submitButton.setOnClickListener({
-            hitApi(urlInput.text.toString(), spinner.selectedItem.toString(), handleJson)
+            hitApi(urlInput.text.toString(), methodSelect.selectedItem.toString(), handleJson, bodyString)
         })
     }
 
-    fun hitApi(endpoint: String, method: String, cb: (Any?) -> Unit, body: String? = null) {
+    fun initSpinner() {
+        val items = arrayOf("GET", "POST", "PUT", "DELETE")
+        methodSelect.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
+        methodSelect.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                val selectedItem = parent.getItemAtPosition(position).toString()
+                if (selectedItem == "POST") {
+                    bodyButton.visibility = View.VISIBLE
+                }
+                else {
+                    bodyButton.visibility = View.INVISIBLE
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+    }
+
+    fun initBodyView() {
+        bodyDoneButton.setOnClickListener({
+            bodyString = bodyField.text.toString()
+            toggleBodyMode()
+        })
+    }
+
+    fun toggleBodyMode() {
+        showHideView(urlInput)
+        showHideView(methodSelect)
+        showHideView(bodyButton)
+        showHideView(submitButton)
+        showHideView(bodyView)
+        showHideView(responseView)
+
+        bodyField.setText(bodyString)
+`
+    }
+
+    fun showHideView(view: View) {
+        view.visibility = if (view.visibility == View.GONE) View.VISIBLE else View.GONE
+    }
+
+    fun hitApi(endpoint: String, method: String, cb: (Any?) -> Unit, body: String) {
         val handleResp = fun (request: Request, response: Response, result: Result<Any, FuelError>) {
             Log.d("Request:", request.toString())
             Log.d("Response:", response.toString())
@@ -55,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             "POST" -> {
-                if (body != null) {
+                if (body != "{\n\n}") {
                     Fuel.post(endpoint).body(body).response { request, response, result ->
                         handleResp(request, response, result)
                     }
