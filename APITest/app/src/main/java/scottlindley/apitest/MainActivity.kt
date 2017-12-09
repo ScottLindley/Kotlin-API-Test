@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
         if (endpoint == null || endpoint == "") return cb("url required")
         if (method == null) return cb("method required")
-        if (method == "POST" || method == "PATCH" && bodyString == null) return cb("body required")
+        if ((method == "POST" || method == "PATCH") && bodyString == null) return cb("body required")
 
         val postHeaders = mapOf<String, Any>( Pair("Content-Type", "application/json") )
 
